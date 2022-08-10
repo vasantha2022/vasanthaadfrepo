@@ -1,0 +1,313 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "myadfjulymonth"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/adfdemo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set city variable",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "var_cityname",
+							"value": {
+								"value": "@trim(split(split(pipeline().parameters.param_city, ',')[1], ':')[1])",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Append city to list of cities",
+						"description": "append to var_listofcities",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Set city variable",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "var_listofcities",
+							"value": {
+								"value": "@variables('var_cityname')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set variable2",
+						"description": "added to appended city",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Append city to list of cities",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "var_appendcity",
+							"value": {
+								"value": "@variables('var_listofcities')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Filter with letters T",
+						"description": "filter T from the list of cities",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Set variable2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.param_listofcities",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@startswith(item(),'T')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"param_city": {
+						"type": "string",
+						"defaultValue": "Address: 221 M.G Road, City: Kolkota, State: West Bengal"
+					},
+					"param_listofcities": {
+						"type": "array",
+						"defaultValue": [
+							"Newyork",
+							"London",
+							"Lisbon",
+							"Tokyo",
+							"singapore"
+						]
+					}
+				},
+				"variables": {
+					"var_cityname": {
+						"type": "String",
+						"defaultValue": "Address: 221 M.G Road, City: Kolkota, State: West Bengal"
+					},
+					"var_listofcities": {
+						"type": "Array",
+						"defaultValue": [
+							"Newyork",
+							"London",
+							"Lisbon",
+							"Tokyo",
+							"singapore city"
+						]
+					},
+					"var_appendcity": {
+						"type": "Array"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-07-30T14:25:34Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Filter city with letter L",
+						"description": "letter l",
+						"type": "Filter",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.param_listofcities",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@startswith(item(), 'L')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"param_listofcities": {
+						"type": "array",
+						"defaultValue": [
+							"Newyork",
+							"London",
+							"Lisbon",
+							"Tokyo",
+							"singapore"
+						]
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-07-30T14:25:35Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@contains(pipeline().parameters.paramlistofcities, pipeline().parameters.cityname)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Set variable2",
+									"description": "",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "var_cityname",
+										"value": "did not find the city"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "var_cityname",
+										"value": "found the city"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"paramlistofcities": {
+						"type": "array",
+						"defaultValue": [
+							"Newyork",
+							"London",
+							"Lisbon",
+							"Tokyo",
+							"singapore"
+						]
+					},
+					"cityname": {
+						"type": "string",
+						"defaultValue": "usa"
+					}
+				},
+				"variables": {
+					"var_cityname": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "linked service for connecting sql server resources",
+				"parameters": {
+					"domainname": {
+						"type": "string"
+					},
+					"databasename": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
