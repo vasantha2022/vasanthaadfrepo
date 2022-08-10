@@ -1,0 +1,124 @@
+{
+	"name": "adfdemo",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set city variable",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var_cityname",
+					"value": {
+						"value": "@trim(split(split(pipeline().parameters.param_city, ',')[1], ':')[1])",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Append city to list of cities",
+				"description": "append to var_listofcities",
+				"type": "AppendVariable",
+				"dependsOn": [
+					{
+						"activity": "Set city variable",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var_listofcities",
+					"value": {
+						"value": "@variables('var_cityname')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable2",
+				"description": "added to appended city",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Append city to list of cities",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var_appendcity",
+					"value": {
+						"value": "@variables('var_listofcities')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter with letters T",
+				"description": "filter T from the list of cities",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Set variable2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.param_listofcities",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item(),'T')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"param_city": {
+				"type": "string",
+				"defaultValue": "Address: 221 M.G Road, City: Kolkota, State: West Bengal"
+			},
+			"param_listofcities": {
+				"type": "array",
+				"defaultValue": [
+					"Newyork",
+					"London",
+					"Lisbon",
+					"Tokyo",
+					"singapore"
+				]
+			}
+		},
+		"variables": {
+			"var_cityname": {
+				"type": "String",
+				"defaultValue": "Address: 221 M.G Road, City: Kolkota, State: West Bengal"
+			},
+			"var_listofcities": {
+				"type": "Array",
+				"defaultValue": [
+					"Newyork",
+					"London",
+					"Lisbon",
+					"Tokyo",
+					"singapore city"
+				]
+			},
+			"var_appendcity": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-07-30T14:25:34Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

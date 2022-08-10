@@ -1,0 +1,39 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Filter city with letter L",
+				"description": "letter l",
+				"type": "Filter",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.param_listofcities",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item(), 'L')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"param_listofcities": {
+				"type": "array",
+				"defaultValue": [
+					"Newyork",
+					"London",
+					"Lisbon",
+					"Tokyo",
+					"singapore"
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-07-30T14:25:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

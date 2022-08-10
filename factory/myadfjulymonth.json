@@ -1,0 +1,9 @@
+{
+	"name": "myadfjulymonth",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "7f08939c-f871-4018-9fb2-1691d029b41e",
+		"tenantId": "359a0412-9f0e-4f7a-8da9-ffcda80c73ff"
+	}
+}
