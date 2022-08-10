@@ -11,7 +11,32 @@
 					"expression": {
 						"value": "@contains(pipeline().parameters.paramlistofcities, pipeline().parameters.cityname)",
 						"type": "Expression"
-					}
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set variable2",
+							"description": "",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "var_cityname",
+								"value": "did not find the city"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "var_cityname",
+								"value": "found the city"
+							}
+						}
+					]
 				}
 			}
 		],
