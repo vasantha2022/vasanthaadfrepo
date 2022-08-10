@@ -1,0 +1,41 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@contains(pipeline().parameters.paramlistofcities, pipeline().parameters.cityname)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"paramlistofcities": {
+				"type": "array",
+				"defaultValue": [
+					"Newyork",
+					"London",
+					"Lisbon",
+					"Tokyo",
+					"singapore"
+				]
+			},
+			"cityname": {
+				"type": "string",
+				"defaultValue": "usa"
+			}
+		},
+		"variables": {
+			"var_cityname": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
