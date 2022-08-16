@@ -72,7 +72,21 @@
 				"inputs": [
 					{
 						"referenceName": "AzureSqlTable1",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"param_domianname": {
+								"value": "@pipeline().parameters.param_sqlservername",
+								"type": "Expression"
+							},
+							"param_databasename": {
+								"value": "@pipeline().parameters.param_sqldatabasename",
+								"type": "Expression"
+							},
+							"param_username": {
+								"value": "@pipeline().parameters.param_adminusername",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
