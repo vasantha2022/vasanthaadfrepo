@@ -1,0 +1,11 @@
+{
+	"name": "LS_adlsgen2",
+	"properties": {
+		"description": "linked service for adlsgen2",
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://adlsvasantha2022-secondary.dfs.core.windows.net"
+		}
+	}
+}
