@@ -1,0 +1,107 @@
+{
+	"name": "pipeline3",
+	"properties": {
+		"activities": [
+			{
+				"name": "find sql server password kv secret",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://sqlsecretjuly.vault.azure.net/secrets/sqlsecretjuly/2bb85ca6a0d740db8870546d213c2c5b",
+					"method": "GET"
+				}
+			},
+			{
+				"name": "copy sql table into csv file",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@pipeline().parameters.param_sqlquery",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Ds_csv",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"param_sqlservername": {
+				"type": "string",
+				"defaultValue": "mysqlserverjuly"
+			},
+			"param_sqldatabasename": {
+				"type": "string",
+				"defaultValue": "my sql database"
+			},
+			"param_adminusername": {
+				"type": "string",
+				"defaultValue": "vida"
+			},
+			"param_sqlquery": {
+				"type": "string",
+				"defaultValue": "SELECT*fromSalesLT.ProductModel"
+			},
+			"param_containername": {
+				"type": "string",
+				"defaultValue": "stage"
+			},
+			"param_directoryname": {
+				"type": "string",
+				"defaultValue": "copy-data-output"
+			}
+		},
+		"annotations": []
+	}
+}
