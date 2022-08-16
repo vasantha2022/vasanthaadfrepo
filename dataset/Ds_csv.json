@@ -6,10 +6,10 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"container": {
+			"param_container": {
 				"type": "string"
 			},
-			"directory": {
+			"param_directory": {
 				"type": "string"
 			}
 		},
