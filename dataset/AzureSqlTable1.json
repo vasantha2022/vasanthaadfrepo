@@ -24,7 +24,7 @@
 			}
 		},
 		"parameters": {
-			"param_domainname": {
+			"param_domianname": {
 				"type": "string"
 			},
 			"param_databasename": {
