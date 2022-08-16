@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"domainname": {
-					"value": "@dataset().param_databasename",
+					"value": "@dataset().param_domianname",
 					"type": "Expression"
 				},
 				"databasename": {
