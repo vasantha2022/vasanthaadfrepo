@@ -22,14 +22,7 @@
 			{
 				"name": "copy sql table into csv file",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "find sql server password kv secret",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -45,7 +38,7 @@
 							"value": "@pipeline().parameters.param_sqlquery",
 							"type": "Expression"
 						},
-						"queryTimeout": "02:00:00",
+						"queryTimeout": "00:01:00",
 						"partitionOption": "None"
 					},
 					"sink": {
@@ -84,6 +77,10 @@
 							},
 							"param_username": {
 								"value": "@pipeline().parameters.param_adminusername",
+								"type": "Expression"
+							},
+							"param_password": {
+								"value": "@activity('find sql server password kv secret').output",
 								"type": "Expression"
 							}
 						}

@@ -3,25 +3,7 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
-			"type": "LinkedServiceReference",
-			"parameters": {
-				"domainname": {
-					"value": "@dataset().param_domianname",
-					"type": "Expression"
-				},
-				"databasename": {
-					"value": "@dataset().param_databasename",
-					"type": "Expression"
-				},
-				"username": {
-					"value": "@dataset().param_username",
-					"type": "Expression"
-				},
-				"password": {
-					"value": "@dataset().param_password",
-					"type": "Expression"
-				}
-			}
+			"type": "LinkedServiceReference"
 		},
 		"parameters": {
 			"param_domianname": {
