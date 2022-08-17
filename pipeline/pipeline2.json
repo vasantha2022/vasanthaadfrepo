@@ -53,7 +53,7 @@
 			},
 			"cityname": {
 				"type": "string",
-				"defaultValue": "usa"
+				"defaultValue": "newyork"
 			}
 		},
 		"variables": {
