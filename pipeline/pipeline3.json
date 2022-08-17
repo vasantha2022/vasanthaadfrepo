@@ -16,7 +16,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": "https://sqlsecretjuly.vault.azure.net/secrets/sqlsecretjuly/2bb85ca6a0d740db8870546d213c2c5b/?api-version=7.0",
-					"method": "GET"
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "http://vault.azure.net"
+					}
 				}
 			},
 			{
