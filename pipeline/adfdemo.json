@@ -8,7 +8,7 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "var_cityname",
+					"variableName": "var_city",
 					"value": {
 						"value": "@trim(split(split(pipeline().parameters.param_city, ',')[1], ':')[1])",
 						"type": "Expression"
@@ -31,7 +31,7 @@
 				"typeProperties": {
 					"variableName": "var_listofcities",
 					"value": {
-						"value": "@variables('var_cityname')",
+						"value": "@variables('var_city')",
 						"type": "Expression"
 					}
 				}
@@ -99,7 +99,7 @@
 			}
 		},
 		"variables": {
-			"var_cityname": {
+			"var_city": {
 				"type": "String",
 				"defaultValue": "Address: 221 M.G Road, City: Kolkota, State: West Bengal"
 			},
